@@ -1,8 +1,9 @@
 #-*- coding: utf-8 -*-
 from django.db.models import Q
-from django.shortcuts import render, get_object_or_404, render 
+from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Post, Category
+from .forms import CommentForm
 
 #create tour nose 
 def home(request):
@@ -14,8 +15,21 @@ def home(request):
 
 def detail(request, id):
     post = get_object_or_404(Post, id=id, status=Post.ACTIVATE)
+    
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+           comment = form.save(commit=False)
+           comment.post = post
+           comment.save()
+
+           return redirect('post_detail', id=id)
+    else:
+     form = CommentForm()
 
     context = {
         'post': post,
+        'form':form
     }
     return render(request, 'blog/detail.html', context)
