@@ -7,7 +7,7 @@ from .forms import CommentForm
 
 #create tour nose 
 def home(request):
-    posts = Post.objects.filter(status=Post.ACTIVE).order_by('-created_at')
+    posts = Post.objects.filter(status=Post.ACTIVATE).order_by('-created_at')
     context ={
         'posts': posts
     }
